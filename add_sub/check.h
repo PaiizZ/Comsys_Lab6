@@ -13,56 +13,59 @@
 using namespace std;
 
 SC_MODULE(check) {
-	sc_in<bool> clk;
-	sc_in<sc_uint<16> > ain, bin;
-	sc_in<bool> ci, as;
-	sc_in<sc_uint<16> > sum;
-	sc_in<bool> co;
-	sc_in<bool> zflag, oflag, lflag;
-	sc_in< sc_uint<4> > control;
-	sc_uint<5> sumc;
+    sc_in<bool> clk;
+    sc_in<sc_uint<4> > ain, bin;
+    sc_in<bool> ci, as;
+    sc_in<sc_uint<4> > sum;
+    sc_in<bool> co;
+    sc_in<bool> zflag, oflag, lflag;
 
-	void pc1() {
-		string name[7] = {"ADD: ","SUB: ","XOR: ","AND: ","OR: ","NOT A: ","STL: "};
-		string op[7] = { " + "," - "," ^ "," & "," | "," ~ "," < " };
-		int con = control.read();
-		if (con != 5) {
-			cout << name[con] << ain.read() << op[con] << bin.read() << " = " << sum.read();
-		}
-		else {
-			cout << name[con] <<" ~ "<<ain.read()<< " = " << sum.read();
-		}
-		sc_uint<16> nota = ~ain.read();
-		if ((con == 0 && sum.read() == (ain.read()+bin.read()) )||
-			(con == 1 && sum.read() == (ain.read() - bin.read()) )||
-			(con == 2 && sum.read() == (ain.read() ^ bin.read()) )||
-			(con == 3 && sum.read() == (ain.read() & bin.read()) )||
-			(con == 4 && sum.read() == (ain.read() | bin.read()) )||
-			(con == 5 && sum.read() == nota) ||
-			(con == 6 && sum.read() == (ain.read() < bin.read()))
-			) {
-			cout << " PASS";
-		}
-		else {
-			cout << " FAIL";
-		}
-		cout << endl;
-		if (zflag.read() == true) { // something like this.
-			cout << "zero value" << endl;
-		}
-		if (oflag.read() == true && !lflag.read() == true) { // something like this.
-			cout << "overflow" << endl;
-		}
-		if (lflag.read() == true && zflag.read() == false) {
-			cout << "a less than b " << endl;
-		}
+    sc_uint<5> sumc;
 
-	}
+    void pc1() {
 
-	SC_CTOR(check) {
-		SC_METHOD(pc1);
-		sensitive << clk.pos();
-		dont_initialize();
-	}
+        if(as){
+          sumc = ain.read() - bin.read() + ci.read();
+
+          int lflagNum = sum.read() - (lflag*16) ;
+          if (lflagNum == -16) {
+            lflagNum = 0 ;
+          }
+          cout << "sub " << ain.read() << " - " << bin.read() << " + " << ci.read() << " = " << lflagNum;
+
+          if (sumc(3,0)==sum.read()) {
+              cout << " Passed" << endl;
+          } else {
+              cout << " Failed, expected sum=" << sumc(3,0) << " co=" << sumc[4] << endl;
+          }
+        }
+        else{
+          sumc=ain.read() + bin.read() + ci.read();
+
+          cout << "fulladder " << ain.read() << " + " << bin.read() << " + " << ci.read() << " = " << sum.read()+co.read() * 16;;
+          if (sumc(3,0)==sum.read() && co==sumc[4]) {
+              cout << " Passed" << endl;
+          } else {
+              cout << " Failed, expected sum=" << sumc(3,0) << " co=" << sumc[4] << endl;
+          }
+        }
+
+        if (zflag.read()==true) { // something like this.
+            cout << "zero value" << endl;
+        }
+        if (oflag.read()==true&&!lflag.read()==true) { // something like this.
+          cout << "overflow" << endl;
+        }
+        if(lflag.read()==true && zflag.read()==false){
+          cout<< "a less than b "<<endl;
+        }
+
+    }
+
+    SC_CTOR(check) {
+        SC_METHOD(pc1);
+        sensitive << clk.pos();
+        dont_initialize();
+    }
 };
 #endif
