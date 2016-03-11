@@ -1,28 +1,25 @@
-#pragma once
-
 #ifndef MULTIPLY_H
 #define MULTIPLY_H
 
 #include <systemc.h>
-#include "adder.h"
+#include "alu.h"
 SC_MODULE(multiplier) {
 	sc_in<sc_uint<16> > ain, bin;
 	sc_signal<sc_uint<16> > a,q,m,aa,mm,ss;
-
+  sc_signal<sc_uint<4> > control;
 	sc_uint<16> _q, _m,_a;
 
 	bool c;
 	sc_out<sc_uint<32> > out;
-	add_sub adder;
-
-	sc_signal<bool> aci, aco, oflag, lflag, zflag,as;
+	alu ALUA;
+	sc_signal<bool> aci, aco, oflag, lflag, zflag;
 	void p1() {
 
 		_q = ain.read();
 		_m = bin.read();
 		_a = 0b0000000000000000;
 		c = 0b00;
-		cout << "_M: " << _m << " " << "_Q: " << _q << " _A: " << _a << endl;
+		//cout << "_M: " << _m << " " << "_Q: " << _q << " _A: " << _a << endl;
 
 		/*q.write(ain.read());
 		m.write(bin.read());*/
@@ -32,7 +29,7 @@ SC_MODULE(multiplier) {
 		while (true) {
 			sc_start(100, SC_NS);
 		}*/
-		cout << "M: " << m.read()<< " " << "Q: " << q.read() << " A: "<<ain.read()<< endl;
+		//cout << "M: " << m.read()<< " " << "Q: " << q.read() << " A: "<<ain.read()<< endl;
 		for (int i = 0; i < 16; i++) {
 			if (_q[0]) {
 				aa = _m;
@@ -64,19 +61,20 @@ SC_MODULE(multiplier) {
 		}
 		out.write(outi);
 	}
-	SC_CTOR(multiplier):adder("add") {
+	SC_CTOR(multiplier): ALUA("ALU") {
 		SC_METHOD(p1);
-		adder.ain(aa);
-		adder.bin(mm);
-		adder.as(as);
-		adder.ci(aci);
-		adder.sum(ss);
-		adder.co(aco);
-		adder.zflag(zflag);
-		adder.oflag(oflag);
-		adder.lflag(lflag);
+		ALUA.ain(aa);
+		ALUA.bin(mm);
+		//ALU.ci(aci)
+		ALUA.sum(ss);
+		control.write(0);
+		ALUA.control(control);
+		//ALU.co(aco);
+		ALUA.zflag(zflag);
+		ALUA.oflag(oflag);
+		ALUA.lflag(lflag);
 
-		sensitive << ain << bin << a << q << m << aa << mm << ss << out << aci << aco << oflag << oflag << lflag << zflag;
+		sensitive << ain << bin << a << q << m << aa << mm << ss << out << aci << aco ;
 	}
 };
 

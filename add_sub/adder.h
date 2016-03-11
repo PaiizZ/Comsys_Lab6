@@ -12,12 +12,11 @@
 SC_MODULE(add_sub) {
 	sc_in<sc_uint<16> > ain, bin;
 	sc_in<bool> ci, as;
-	sc_out<sc_uint<16
-	> > sum;
+	sc_out<sc_uint<16> > sum;
 	sc_out<bool> co;
 	sc_out<bool> zflag, oflag, lflag;
-	bool co0, co1, co2, co3;
-	bool coi0, coi1, coi2, coi3;
+//	bool co0, co1, co2, co3;
+//	bool coi0, coi1, coi2, coi3;
 	sc_uint<16> sum_s, sum_f;
 
 	// 1-bit ripple carry fulladder, note the cof reference bool&

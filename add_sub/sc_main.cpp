@@ -1,15 +1,6 @@
-//------------------------------------------------------------------
-// Simple Testbench for 4-bits adder file
-//
-// SystemC for VHDL engineers
-// (c)www.ht-lab.com
-//------------------------------------------------------------------
-
 #include <systemc.h>
 
 #include "adder.h"
-#include "stim.h"
-#include "check.h"
 #include "multiplier.h"
 
 int sc_main(int argc, char* argv[])
@@ -44,27 +35,21 @@ int sc_main(int argc, char* argv[])
 
 	ain.write(4);
 	bin.write(3);
-
-	/*
-	stim STIM("stimulus");              // Instantiate stimulus generator
-	STIM.clk(clk);
-	STIM.ain(ain);
-	STIM.bin(bin);
-	STIM.ci(ci);
-	STIM.as(as);
-	check CHECK("checker");             // Instantiate checker
-	CHECK.clk(clk);
-	CHECK.ain(ain);
-	CHECK.bin(bin);
-	CHECK.ci(ci);
-	CHECK.sum(out);
-	CHECK.oflag(oflag);
-	CHECK.zflag(zflag);
-	CHECK.co(co);
-	CHECK.as(as);
-	CHECK.lflag(lflag);*/
-
 	sc_start(100, SC_NS);               // Run simulation
-	cout << ain << "*" << bin << "=" << out;
+
+	cout << ain << "*" << bin << "=" << out << endl;
+
+	ain.write(2);
+	bin.write(3);
+//	cout << ain << "*" << bin << "=" << out;
+	sc_start(100, SC_NS);               // Run simulation
+
+	cout << ain << "*" << bin << "=" << out<< endl;
+	ain.write(5);
+	bin.write(3);
+//	cout << ain << "*" << bin << "=" << out;
+	sc_start(100, SC_NS);               // Run simulation
+
+	cout << ain << "*" << bin << "=" << out<< endl;
 	return 0;                           // Return OK, no errors.
 }
