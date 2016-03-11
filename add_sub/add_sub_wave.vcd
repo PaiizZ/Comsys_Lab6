@@ -1,5 +1,5 @@
 $date
-     Feb 26, 2016       13:43:26
+     Mar 11, 2016       13:10:01
 $end
 
 $version
@@ -11,9 +11,9 @@ $timescale
 $end
 
 $scope module SystemC $end
-$var wire    4  aaaaa  ain [3:0]  $end
-$var wire    4  aaaab  bin [3:0]  $end
-$var wire    4  aaaac  sum [3:0]  $end
+$var wire   16  aaaaa  ain [15:0]  $end
+$var wire   16  aaaab  bin [15:0]  $end
+$var wire   16  aaaac  sum [15:0]  $end
 $var wire    1  aaaad  ci       $end
 $var wire    1  aaaae  co       $end
 $var wire    1  aaaaf  zflag       $end
@@ -28,14 +28,14 @@ All initial values are dumped below at time 0 sec = 0 timescale units.
 $end
 
 $dumpvars
-b1 aaaaa
-b101 aaaab
-b110 aaaac
+b100 aaaaa
+b11 aaaab
+b0 aaaac
 0aaaad
 0aaaae
 0aaaaf
 0aaaag
-1aaaah
+0aaaah
 1aaaai
 $end
 
@@ -43,45 +43,30 @@ $end
 0aaaai
 
 #10000
-b1100 aaaac
 1aaaai
 
 #15000
 0aaaai
 
 #20000
-b100 aaaaa
-b1 aaaab
-b101 aaaac
 1aaaai
 
 #25000
 0aaaai
 
 #30000
-b11 aaaac
-1aaaae
-1aaaag
-0aaaah
 1aaaai
 
 #35000
 0aaaai
 
 #40000
-b1 aaaaa
-b10 aaaac
-0aaaae
-0aaaag
-1aaaah
 1aaaai
 
 #45000
 0aaaai
 
 #50000
-b0 aaaac
-1aaaaf
 1aaaai
 
 #55000
@@ -89,4 +74,25 @@ b0 aaaac
 
 #60000
 1aaaai
+
+#65000
+0aaaai
+
+#70000
+1aaaai
+
+#75000
+0aaaai
+
+#80000
+1aaaai
+
+#85000
+0aaaai
+
+#90000
+1aaaai
+
+#95000
+0aaaai
 
