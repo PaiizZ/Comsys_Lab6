@@ -1,55 +1,41 @@
 #include <systemc.h>
 
-#include "adder.h"
 #include "multiplier.h"
 
 int sc_main(int argc, char* argv[])
 {
-	sc_signal<sc_uint<16> > ain, bin, sum;
+	sc_signal<sc_uint<16> > ain, bin ;
 	sc_signal<sc_uint<32> > out;
-	sc_signal<bool> ci, co;
-	sc_signal<bool> zflag, oflag, lflag;
-	sc_signal<bool> as;
 	sc_clock clk("clk", 10, SC_NS, 0.5);   // Create a clock signal
 
-
+	//trace
 	sc_trace_file *fp;
 	fp = sc_create_vcd_trace_file("add_sub_wave");
 	fp->set_time_unit(1, SC_PS);
 	sc_trace(fp, ain, "ain");
 	sc_trace(fp, bin, "bin");
-	sc_trace(fp, sum, "sum");
-	sc_trace(fp, ci, "ci");
-	sc_trace(fp, co, "co");
-	sc_trace(fp, zflag, "zflag");
-	sc_trace(fp, oflag, "oflag");
-	sc_trace(fp, lflag, "lflag");
 	sc_trace(fp, clk, "clk");
 
 
-
+	//bind multoplier
 	multiplier mul("multiplier");
 	mul.ain(ain);
 	mul.bin(bin);
 	mul.out(out);
 
-	ain.write(4);
-	bin.write(3);
-	sc_start(100, SC_NS);               // Run simulation
+	//test : multiplication table
+	for (int i = 1; i < 13; i++) {
+	for (int j = 2; j < 13; j++) {
+		/* code */
+		ain.write(j);
+		bin.write(i);
+		sc_start(1000, SC_NS);               // Run simulation
+		cout << ain << "*" << bin << " = " << out << " " ;
+	}
+	cout << endl;
+}
 
-	cout << ain << "*" << bin << "=" << out << endl;
 
-	ain.write(2);
-	bin.write(3);
-//	cout << ain << "*" << bin << "=" << out;
-	sc_start(100, SC_NS);               // Run simulation
 
-	cout << ain << "*" << bin << "=" << out<< endl;
-	ain.write(5);
-	bin.write(3);
-//	cout << ain << "*" << bin << "=" << out;
-	sc_start(100, SC_NS);               // Run simulation
-
-	cout << ain << "*" << bin << "=" << out<< endl;
 	return 0;                           // Return OK, no errors.
 }
